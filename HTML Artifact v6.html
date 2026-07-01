@@ -1,0 +1,1146 @@
+<html lang="en" class="light"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise GRP &amp; SOV Intelligence Suite</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SheetJS for local file parsing and generation -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {}
+            }
+        }
+    </script>
+    
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+        
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.05); }
+        .dark ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.3); }
+        ::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.2); border-radius: 99px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.5); }
+
+        /* Dynamic Glassmorphic Card Classes */
+        .theme-panel {
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .dark .theme-panel {
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+        .light .theme-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
+        }
+
+        /* Hover animations */
+        .animate-card {
+            will-change: transform, opacity;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .animate-card:hover {
+            transform: translateY(-4px) scale(1.005);
+        }
+        .dark .animate-card:hover {
+            box-shadow: 0 20px 30px -15px rgba(99, 102, 241, 0.2);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+        .light .animate-card:hover {
+            box-shadow: 0 15px 25px -10px rgba(15, 23, 42, 0.08);
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        /* Entrance Animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* AI Orb Core Animation */
+        @keyframes orb-pulse {
+            0% { transform: scale(0.92); box-shadow: 0 0 15px 1px rgba(99, 102, 241, 0.5); }
+            50% { transform: scale(1.08); box-shadow: 0 0 30px 6px rgba(168, 85, 247, 0.7); }
+            100% { transform: scale(0.92); box-shadow: 0 0 15px 1px rgba(99, 102, 241, 0.5); }
+        }
+        .hologram-core {
+            animation: orb-pulse 3s infinite ease-in-out;
+            background: radial-gradient(circle, #6366f1 0%, #a855f7 100%);
+        }
+
+        /* Orbit Ring Rotations */
+        @keyframes orbit-cw {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes orbit-ccw {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
+        }
+        .orbit-outer { animation: orbit-cw 12s linear infinite; }
+        .orbit-inner { animation: orbit-ccw 8s linear infinite; }
+
+        .progress-bar-fill {
+            transition: width 0.4s ease-out;
+        }
+        
+        /* Modern Loader Circle Animation */
+        @keyframes spinner-rotate {
+            100% { transform: rotate(360deg); }
+        }
+        .animate-spinner {
+            animation: spinner-rotate 1s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-[#F8FAFC] text-slate-800 dark:bg-[#030712] dark:text-slate-100 min-h-screen flex flex-col antialiased pb-12 transition-colors duration-300">
+
+    <!-- Premium Header -->
+    <header class="theme-panel text-slate-800 dark:text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-[1700px] mx-auto px-6 py-4 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <!-- Left Branding Group -->
+            <div class="flex items-center gap-4">
+                <div class="relative flex items-center justify-center w-11 h-11 rounded-2xl bg-indigo-600/10 border border-indigo-500/20">
+                    <span class="text-xl font-bold text-indigo-600 dark:text-indigo-400">💎</span>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white font-display flex items-center gap-2">
+                        GRP &amp; SOV Intelligence Suite
+                        <span id="restoreBadge" class="hidden text-[9px] bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full uppercase tracking-widest font-sans font-bold">Restored from Cache</span>
+                    </h1>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Enterprise Media Operations &amp; Analytics Suite</p>
+                </div>
+            </div>
+
+            <!-- Right Workspace Controls -->
+            <div class="flex flex-wrap items-center gap-4 w-full lg:w-auto justify-end">
+                <!-- Theme Switcher -->
+                <button onclick="toggleTheme()" class="bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 py-2 px-4 rounded-xl border border-slate-200 dark:border-white/5 transition-all cursor-pointer text-xs flex items-center gap-2 font-semibold font-display font-bold">
+                    <span id="themeBtnIcon">🌙 Dark Theme</span>
+                </button>
+
+                <!-- Database Metrics Tracker -->
+                <div id="dataCounter" class="hidden bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-white/5 px-4 py-2 rounded-2xl text-xs text-slate-700 dark:text-slate-300 flex items-center gap-3">
+                    <span class="text-[11px] text-slate-500 dark:text-slate-400">Spots Loaded:</span>
+                    <span id="recordCount" class="font-bold text-indigo-600 dark:text-indigo-400">0</span> 
+                    <span class="text-slate-300 dark:text-slate-700">|</span> 
+                    <span class="text-[11px] text-slate-500 dark:text-slate-400">Timeline:</span> <span id="timelineTracker" class="font-bold text-indigo-500 dark:text-purple-400">N/A</span>
+                </div>
+                
+                <button onclick="clearAllData()" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 dark:text-rose-400 font-semibold py-2.5 px-5 rounded-2xl text-xs border border-rose-500/20 transition-all cursor-pointer font-display font-bold">
+                    Clear Workspace
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-[1700px] mx-auto w-full px-6 py-8 flex-grow space-y-8">
+        
+        <!-- Interactive Error & Success Validation Logs -->
+        <div id="validationAlert" class="hidden bg-red-50 border-l-4 border-red-500 dark:bg-red-950/20 dark:border-red-600 text-red-700 dark:text-red-400 p-4 rounded-xl shadow-xs flex flex-col gap-1 transition-all duration-300 fade-in-up" role="alert">
+            <div class="flex items-center justify-between">
+                <span class="font-bold text-sm flex items-center gap-1.5">⚠️ File Import Notification</span>
+                <button onclick="closeValidationAlert()" class="text-xs text-red-500 hover:text-red-800 dark:text-red-400 font-bold">Dismiss</button>
+            </div>
+            <p class="text-xs mt-1">Some files failed structure check limits and were skipped during parsing:</p>
+            <ul id="errorList" class="list-disc pl-5 text-[11px] text-red-600 dark:text-red-400 space-y-0.5 mt-1 font-mono"></ul>
+        </div>
+
+        <!-- Step 1: File Upload Gateway & Template Downloader -->
+        <section class="theme-panel p-6 rounded-3xl border relative overflow-hidden fade-in-up flex flex-col lg:flex-row items-stretch justify-between gap-6" style="animation-delay: 100ms;">
+            <div class="flex-grow">
+                <h2 class="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-widest mb-3 font-display font-bold">1. Parallel Media Input Gateway</h2>
+                <div class="flex items-center justify-center w-full">
+                    <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-200 dark:border-white/10 hover:border-indigo-500/40 rounded-2xl cursor-pointer bg-slate-50/50 dark:bg-slate-900/25 hover:bg-indigo-50/5 dark:hover:bg-indigo-500/5 transition-all duration-300">
+                        <div id="uploadDefaultView" class="flex flex-col items-center justify-center text-center px-4">
+                            <div class="w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center mb-2 border border-indigo-500/20">
+                                <span class="text-indigo-500 text-lg">📥</span>
+                            </div>
+                            <p class="text-sm text-slate-700 dark:text-slate-300"><span class="font-semibold text-indigo-600 dark:text-indigo-400">Select or Drag up to 12 files</span></p>
+                            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">Supports XLSX, XLS, and CSV files matching the agreed template layout (Upto 500,000+ rows)</p>
+                        </div>
+                        
+                        <!-- Dynamic percentage loader overlay -->
+                        <div id="uploadLoadingView" class="hidden flex flex-col items-center justify-center text-center w-full max-w-md px-6">
+                            <svg class="animate-spinner h-8 w-8 text-indigo-600 dark:text-indigo-400 mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <div class="flex justify-between w-full mb-1">
+                                <span id="loadingPercentLabel" class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 font-display">Processing: 0%</span>
+                                <span id="loadingFilesLabel" class="text-[11px] text-slate-400 font-mono">0 of 0 files</span>
+                            </div>
+                            <div class="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden shadow-inner">
+                                <div id="loadingProgressBar" class="bg-indigo-600 h-2 rounded-full progress-bar-fill" style="width: 0%"></div>
+                            </div>
+                            <p id="parsingFileLabel" class="text-[10px] text-slate-400 mt-2 truncate max-w-xs italic"></p>
+                        </div>
+                        <input type="file" id="excelFile" accept=".xlsx, .xls, .csv" multiple="" class="hidden">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Template Downloader Block -->
+            <div class="lg:w-80 flex flex-col justify-between p-5 bg-indigo-50/40 dark:bg-slate-900/30 border border-indigo-100 dark:border-white/5 rounded-2xl">
+                <div>
+                    <span class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest block font-display">System Excel Template</span>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">Ensure your files are structured correctly by using our standard GRP uploader layout.</p>
+                </div>
+                <button onclick="downloadUploadTemplate()" class="mt-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-4 rounded-xl text-xs transition-all hover:scale-[1.03] cursor-pointer shadow-md flex items-center justify-center gap-1.5 font-display font-bold">
+                    📋 Download GRP Input Template
+                </button>
+            </div>
+        </section>
+
+        <!-- Main Workspace -->
+        <div id="workspace" class="hidden space-y-8">
+            
+            <!-- Step 2: Advanced Searchable Filters Panel -->
+            <section class="theme-panel p-6 rounded-3xl shadow-xl border fade-in-up" style="animation-delay: 200ms;">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-sm font-bold text-indigo-500 dark:text-indigo-400 uppercase tracking-wider font-display">2. Segmentation Controls</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Refining metrics instantly updates GRP aggregates and SOV market positions.</p>
+                    </div>
+                    <button onclick="resetFilters()" class="text-xs bg-slate-100 hover:bg-indigo-600 dark:bg-slate-800/60 border border-slate-200 dark:border-white/5 hover:border-indigo-500 text-slate-700 hover:text-white dark:text-slate-200 py-2.5 px-4 rounded-xl font-semibold transition-all hover:scale-[1.03] cursor-pointer">Reset All Filters</button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <!-- Channels -->
+                    <div class="flex flex-col bg-slate-50 dark:bg-slate-950/40 p-4 rounded-2xl border border-slate-200 dark:border-white/5 transition-all duration-300 hover:border-indigo-500/20">
+                        <span class="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-widest mb-2.5 font-display">Channels</span>
+                        <input type="text" placeholder="Search Channels..." oninput="filterCheckboxes('chanSearch', 'chanList')" id="chanSearch" class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 text-xs rounded-xl p-2.5 mb-2.5 text-slate-800 dark:text-slate-200 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none placeholder-slate-400 dark:placeholder-slate-500 transition-all">
+                        <div class="flex justify-between text-[10px] text-slate-400 dark:text-slate-500 mb-2 px-1">
+                            <button onclick="toggleSelectAll('chanList', true)" class="hover:text-indigo-500 font-semibold transition-colors">Select All</button>
+                            <button onclick="toggleSelectAll('chanList', false)" class="hover:text-rose-500 font-semibold transition-colors">Clear</button>
+                        </div>
+                        <div id="chanList" class="overflow-y-auto max-h-40 space-y-1.5 scrollbar-thin text-slate-700 dark:text-slate-300 font-bold"></div>
+                    </div>
+
+                    <!-- Months -->
+                    <div class="flex flex-col bg-slate-50 dark:bg-slate-950/40 p-4 rounded-2xl border border-slate-200 dark:border-white/5 transition-all duration-300 hover:border-indigo-500/20">
+                        <span class="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-widest mb-2.5 font-display">Months</span>
+                        <input type="text" placeholder="Search Months..." oninput="filterCheckboxes('monthSearch', 'monthList')" id="monthSearch" class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 text-xs rounded-xl p-2.5 mb-2.5 text-slate-800 dark:text-slate-200 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none placeholder-slate-400 dark:placeholder-slate-500 transition-all">
+                        <div class="flex justify-between text-[10px] text-slate-400 dark:text-slate-500 mb-2 px-1">
+                            <button onclick="toggleSelectAll('monthList', true)" class="hover:text-indigo-500 font-semibold transition-colors">Select All</button>
+                            <button onclick="toggleSelectAll('monthList', false)" class="hover:text-rose-500 font-semibold transition-colors">Clear</button>
+                        </div>
+                        <div id="monthList" class="overflow-y-auto max-h-40 space-y-1.5 scrollbar-thin text-slate-700 dark:text-slate-300 font-bold"></div>
+                    </div>
+
+                    <!-- Product Groups -->
+                    <div class="flex flex-col bg-slate-50 dark:bg-slate-950/40 p-4 rounded-2xl border border-slate-200 dark:border-white/5 transition-all duration-300 hover:border-indigo-500/20">
+                        <span class="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-widest mb-2.5 font-display">Product Groups</span>
+                        <input type="text" placeholder="Search Groups..." oninput="filterCheckboxes('prodSearch', 'prodList')" id="prodSearch" class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 text-xs rounded-xl p-2.5 mb-2.5 text-slate-800 dark:text-slate-200 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none placeholder-slate-400 dark:placeholder-slate-500 transition-all">
+                        <div class="flex justify-between text-[10px] text-slate-400 dark:text-slate-500 mb-2 px-1">
+                            <button onclick="toggleSelectAll('prodList', true)" class="hover:text-indigo-500 font-semibold transition-colors">Select All</button>
+                            <button onclick="toggleSelectAll('prodList', false)" class="hover:text-rose-500 font-semibold transition-colors">Clear</button>
+                        </div>
+                        <div id="prodList" class="overflow-y-auto max-h-40 space-y-1.5 scrollbar-thin text-slate-700 dark:text-slate-300 font-bold"></div>
+                    </div>
+
+                    <!-- Advertisers -->
+                    <div class="flex flex-col bg-slate-50 dark:bg-slate-950/40 p-4 rounded-2xl border border-slate-200/50 dark:border-white/5 transition-all duration-300 hover:border-indigo-500/20">
+                        <span class="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-widest mb-2.5 font-display">Advertisers</span>
+                        <input type="text" placeholder="Search Advertisers..." oninput="filterCheckboxes('advSearch', 'advList')" id="advSearch" class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 text-xs rounded-xl p-2.5 mb-2.5 text-slate-800 dark:text-slate-200 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none placeholder-slate-400 dark:placeholder-slate-500 transition-all">
+                        <div class="flex justify-between text-[10px] text-slate-400 dark:text-slate-500 mb-2 px-1">
+                            <button onclick="toggleSelectAll('advList', true)" class="hover:text-indigo-500 font-semibold transition-colors">Select All</button>
+                            <button onclick="toggleSelectAll('advList', false)" class="hover:text-rose-500 font-semibold transition-colors">Clear</button>
+                        </div>
+                        <div id="advList" class="overflow-y-auto max-h-40 space-y-1.5 scrollbar-thin text-slate-700 dark:text-slate-300 font-bold"></div>
+                    </div>
+                </div>
+
+                <!-- 30-Min Interval Timeline Scheduler -->
+                <div class="mt-6 bg-slate-50 dark:bg-slate-950/60 p-5 rounded-2xl border border-slate-200 dark:border-white/5 transition-all duration-300">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                        <div>
+                            <span class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest font-display">30-Minute Broadcast Schedule Grid</span>
+                            <p class="text-[11px] text-slate-500">Fine-tune prime and off-prime time slots to trace active GRP conversions.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="applyDaypartTemplate('PT')" class="px-3.5 py-1.5 bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20 rounded-lg text-[10px] font-semibold transition-all">Prime Time (18:00 - 22:00)</button>
+                            <button onclick="applyDaypartTemplate('NPT')" class="px-3.5 py-1.5 bg-amber-600/10 hover:bg-amber-600/20 text-amber-600 dark:text-amber-300 border border-amber-500/20 rounded-lg text-[10px] font-semibold transition-all">Non-Prime Time</button>
+                            <button onclick="toggleTimeAll(true)" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-[10px] font-semibold transition-all">Select All</button>
+                            <button onclick="toggleTimeAll(false)" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-rose-500 rounded-lg text-[10px] font-semibold transition-all">Clear All</button>
+                        </div>
+                    </div>
+                    <div id="timeScheduleContainer" class="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-12 gap-2 max-h-40 overflow-y-auto pr-1"></div>
+                </div>
+            </section>
+
+            <!-- Step 3: Key Executive Metrics -->
+            <section class="grid grid-cols-1 md:grid-cols-4 gap-6 fade-in-up" style="animation-delay: 300ms;">
+                <!-- GRP (TVR) -->
+                <div class="theme-panel p-6 rounded-3xl border animate-card text-slate-850 dark:text-white">
+                    <span class="text-xs font-semibold text-indigo-500 dark:text-indigo-400 uppercase tracking-wider block font-display font-bold">GRP (TVR)</span>
+                    <span id="metricGrpTvr" class="text-4xl font-bold block mt-2 font-display tracking-tight">0</span>
+                </div>
+                <!-- GRP (nTVR) -->
+                <div class="theme-panel p-6 rounded-3xl border animate-card text-slate-850 dark:text-white">
+                    <span class="text-xs font-semibold text-purple-500 dark:text-purple-400 uppercase tracking-wider block font-display font-bold">GRP (nTVR)</span>
+                    <span id="metricGrpNtvr" class="text-4xl font-bold block mt-2 font-display tracking-tight">0</span>
+                </div>
+                <!-- Total Expenditure -->
+                <div class="theme-panel p-6 rounded-3xl border animate-card text-slate-850 dark:text-white">
+                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block font-display font-bold">Total Spend</span>
+                    <span id="metricTotalCost" class="text-3xl font-bold block mt-2 font-display tracking-tight">LKR 0.00</span>
+                    <span id="metricRawCost" class="text-[10px] text-slate-500 dark:text-slate-400 block mt-1">Exact: LKR 0</span>
+                </div>
+                <!-- Spot Volume -->
+                <div class="theme-panel p-6 rounded-3xl border animate-card text-slate-850 dark:text-white">
+                    <span class="text-xs font-semibold text-emerald-500 dark:text-emerald-400 uppercase tracking-wider block font-display font-bold">Spot Volume</span>
+                    <span id="metricTotalSpots" class="text-4xl font-bold block mt-2 font-display tracking-tight">0</span>
+                </div>
+            </section>
+
+            <!-- Step 4: Share Of Voice (SOV) Dynamics -->
+            <section class="theme-panel rounded-3xl p-6 border shadow-2xl fade-in-up" style="animation-delay: 400ms;">
+                <div class="border-b border-slate-100 dark:border-white/5 pb-4 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-950 dark:text-white uppercase tracking-wider font-display flex items-center gap-2">📢 SOV Share Engine</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Visualizing market dominance metrics calculated against category totals.</p>
+                    </div>
+                    <!-- SOV Metric Toggles -->
+                    <div class="inline-flex rounded-xl border border-slate-200 dark:border-white/5 p-1 bg-slate-100 dark:bg-slate-950/60 text-xs font-semibold text-slate-800 dark:text-slate-300">
+                        <button onclick="toggleSovMetric('Cost')" id="toggleSovCost" class="px-4 py-1.5 rounded-lg bg-white dark:bg-white/10 text-slate-950 dark:text-white shadow-xs transition-all cursor-pointer">By Spend (LKR)</button>
+                        <button onclick="toggleSovMetric('GRP')" id="toggleSovGRP" class="px-4 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer">By GRP (TVR)</button>
+                        <button onclick="toggleSovMetric('nGRP')" id="toggleSovNgrp" class="px-4 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer">By GRP (nTVR)</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Top 10 Advertisers SOV -->
+                    <div class="space-y-4">
+                        <h4 class="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-widest flex justify-between font-display font-bold">
+                            <span>Top 10 Advertisers SOV</span>
+                            <span id="sovAdvMetricHeader" class="text-slate-500">Spend Metric</span>
+                        </h4>
+                        <div id="topAdvertisersList" class="space-y-4 max-h-[420px] overflow-y-auto pr-2 scrollbar-thin"></div>
+                    </div>
+
+                    <!-- Top 10 Brands SOV -->
+                    <div class="space-y-4">
+                        <h4 class="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-widest flex justify-between font-display font-bold">
+                            <span>Top 10 Brands SOV</span>
+                            <span id="sovBrandMetricHeader" class="text-slate-500">Spend Metric</span>
+                        </h4>
+                        <div id="topBrandsList" class="space-y-4 max-h-[420px] overflow-y-auto pr-2 scrollbar-thin"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 5: Table Grid -->
+            <section class="theme-panel rounded-3xl border shadow-2xl overflow-hidden fade-in-up" style="animation-delay: 500ms;">
+                <div class="p-6 border-b border-slate-100 dark:border-white/5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50 dark:bg-slate-950/20">
+                    <div>
+                        <h2 class="text-sm font-bold text-slate-950 dark:text-white uppercase tracking-wider font-display">Active Transaction Logs</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Showing matching rows that meet selected parameters (capped at 50 rows for interface speed).</p>
+                    </div>
+                    <button onclick="downloadFilteredData()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-6 rounded-xl text-xs transition-all hover:scale-[1.03] cursor-pointer shadow-lg shadow-indigo-500/10 font-bold">
+                        Export Report to CSV
+                    </button>
+                </div>
+                
+                <div class="overflow-x-auto max-h-96">
+                    <table class="min-w-full divide-y divide-slate-200 dark:divide-white/5 text-xs">
+                        <thead class="bg-slate-50 dark:bg-slate-950/40 sticky top-0">
+                            <tr id="tableHeaders"></tr>
+                        </thead>
+                        <tbody id="tableBody" class="bg-transparent divide-y divide-slate-100 dark:divide-white/5 text-slate-700 dark:text-slate-300"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Animated Holographic AI Bot Panel -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <!-- AI Panel Box -->
+        <div id="aiChatBubble" class="hidden w-80 bg-white dark:bg-slate-950/95 text-slate-800 dark:text-slate-200 rounded-3xl border border-slate-200 dark:border-white/10 p-5 mb-3 shadow-2xl transition-all duration-300 flex flex-col space-y-4 backdrop-blur-md">
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-2">
+                <div class="flex items-center gap-2">
+                    <span class="text-indigo-500 dark:text-indigo-400 text-sm">🔮</span>
+                    <span class="text-xs font-bold font-display uppercase tracking-wider text-slate-800 dark:text-slate-100">System AI Copilot</span>
+                </div>
+                <button onclick="toggleAiBubble()" class="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">Close</button>
+            </div>
+            <div id="aiResponseContent" class="text-xs space-y-3 max-h-60 overflow-y-auto pr-1 leading-relaxed text-slate-600 dark:text-slate-300 font-bold">
+                Welcome. Upload your campaign spreadsheet to initialize GRP analytics, parameters, and SOV market curves.
+            </div>
+        </div>
+
+        <!-- 3D Holographic Orb Button -->
+        <div onclick="toggleAiBubble()" class="relative group cursor-pointer w-14 h-14 flex items-center justify-center">
+            <!-- Outer Pulsing Orbit Ring -->
+            <div class="absolute inset-0 border border-indigo-500/30 rounded-full orbit-outer"></div>
+            <!-- Inner Counter-Rotating Orbit Ring -->
+            <div class="absolute inset-2 border border-purple-500/30 border-dashed rounded-full orbit-inner"></div>
+            <!-- Hologram Core Node -->
+            <div class="relative w-8 h-8 rounded-full hologram-core flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-.75-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Core Engine -->
+    <script>
+        let rawData = [];
+        let filteredData = [];
+        let activeSovMetric = 'Cost'; 
+
+        // Dynamic Generator for the Upload Excel Template
+        function downloadUploadTemplate() {
+            const headers = [
+                "Channel", "Product_Group", "Advertiser", "Product", "Advt_Theme", 
+                "Spot/VA", "Ads", "Program", "Dd", "Mn", "Yr", "Day", "Advt_time", 
+                "PT/NPT", "AdPos", "TotAds", "BrkNo", "PosinBrk", "AdsinBrk", "Lng", 
+                "Duration", "Cost", "TVR", "nTVR"
+            ];
+            
+            const sampleRow = {
+                "Channel": "Channel One",
+                "Product_Group": "Beverages",
+                "Advertiser": "Global Brands Ltd",
+                "Product": "Energy Drink X",
+                "Advt_Theme": "Launch Theme",
+                "Spot/VA": "Spot",
+                "Ads": 1,
+                "Program": "Prime Time News",
+                "Dd": 1,
+                "Mn": "Jan", 
+                "Yr": 2026,
+                "Day": "Wednesday",
+                "Advt_time": "18:30:15", 
+                "PT/NPT": "PT",
+                "AdPos": 1,
+                "TotAds": 1,
+                "BrkNo": 1,
+                "PosinBrk": 1,
+                "AdsinBrk": 1,
+                "Lng": 30,
+                "Duration": 30,
+                "Cost": 150000, 
+                "TVR": 4.5,
+                "nTVR": 4.2
+            };
+
+            const worksheet = XLSX.utils.json_to_sheet([sampleRow], { header: headers });
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+            XLSX.writeFile(workbook, "Media_Input_Template.xlsx");
+        }
+
+        // Theme Toggle Controller
+        function toggleTheme() {
+            const html = document.querySelector('html');
+            const themeIcon = document.getElementById('themeBtnIcon');
+            
+            if (html.classList.contains('light')) {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.innerText = "☀️ Light Theme";
+            } else {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                localStorage.setItem('theme', 'light');
+                themeIcon.innerText = "🌙 Dark Theme";
+            }
+        }
+
+        // Apply saved theme settings safely
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.className = savedTheme;
+            
+            window.addEventListener('DOMContentLoaded', () => {
+                const themeIcon = document.getElementById('themeBtnIcon');
+                if (themeIcon) {
+                    themeIcon.innerText = savedTheme === 'dark' ? "☀️ Light Theme" : "🌙 Dark Theme";
+                }
+            });
+        })();
+
+        // Cache parameters to browser Storage safely
+        function saveDataToCache(data) {
+            try {
+                if (data.length < 50000) {
+                    localStorage.setItem('spots_cache', JSON.stringify(data));
+                } else {
+                    localStorage.removeItem('spots_cache'); // Clear Cache to prevent storage limits crash
+                }
+            } catch(e) {
+                console.warn("Storage limits reached, operating in fast execution mode.");
+            }
+        }
+
+        function loadDataFromCache() {
+            try {
+                const cachedData = localStorage.getItem('spots_cache');
+                return cachedData ? JSON.parse(cachedData) : [];
+            } catch(e) {
+                return [];
+            }
+        }
+
+        // Auto-Run Storage Recovery on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            const cachedRecords = loadDataFromCache();
+            if (cachedRecords && cachedRecords.length > 0) {
+                rawData = cachedRecords;
+                
+                document.getElementById('workspace').classList.remove('hidden');
+                document.getElementById('dataCounter').classList.remove('hidden');
+                document.getElementById('restoreBadge').classList.remove('hidden');
+                document.getElementById('recordCount').innerText = rawData.length.toLocaleString();
+                
+                updateTimeline();
+                buildTimelineScheduler();
+                initCheckboxes();
+                applyFilters();
+            }
+        });
+
+        // Close Alert Element
+        function closeValidationAlert() {
+            document.getElementById('validationAlert').classList.add('hidden');
+        }
+
+        const monthMap = {
+            "1": "Jan", "2": "Feb", "3": "Mar", "4": "Apr", 
+            "5": "May", "6": "Jun", "7": "Jul", "8": "Aug", 
+            "9": "Sep", "10": "Oct", "11": "Nov", "12": "Dec"
+        };
+
+        const timeIntervals = [];
+        for (let hour = 0; hour < 24; hour++) {
+            const hStr = hour.toString().padStart(2, '0');
+            timeIntervals.push(`${hStr}:00-${hStr}:30`);
+            timeIntervals.push(`${hStr}:30-${(hour === 23 ? 0 : hour + 1).toString().padStart(2, '0')}:00`);
+        }
+
+        // Live GRP/SOV Analyst Intelligence
+        function updateAiAnalysis(totalCost, totalGrp, totalSpots) {
+            const div = document.getElementById('aiResponseContent');
+            if (rawData.length === 0) {
+                div.innerHTML = `<p>Waiting for data upload to begin...</p>`;
+                return;
+            }
+
+            const cpp = totalGrp > 0 ? (totalCost / totalGrp) : 0;
+            let efficiencyStatement = "The current selection displays normal efficiency ratios.";
+            if (cpp < 80000 && cpp > 0) {
+                efficiencyStatement = "This selection demonstrates exceptional budget efficiency with a highly optimized GRP footprint.";
+            } else if (cpp > 250000) {
+                efficiencyStatement = "The calculated profile shows premium pricing. Consider shifting slots to off-prime intervals to reduce CPMs.";
+            }
+
+            div.innerHTML = `
+                <p class="font-bold text-indigo-500 dark:text-indigo-400">📊 Real-Time Campaign Insight</p>
+                <div class="space-y-2 mt-1">
+                    <p>My audit of the selected <strong>${totalSpots.toLocaleString()} spots</strong> shows:</p>
+                    <ul class="list-disc pl-4 space-y-1 text-slate-500 dark:text-slate-400">
+                        <li>Delivered GRP: <span class="text-slate-700 dark:text-slate-200 font-semibold">${Math.round(totalGrp).toLocaleString()}</span></li>
+                        <li>Average Cost per Point: <span class="text-slate-700 dark:text-slate-200 font-semibold">LKR ${Math.round(cpp).toLocaleString()}</span></li>
+                    </ul>
+                    <p class="text-slate-600 dark:text-slate-300 mt-2">${efficiencyStatement}</p>
+                </div>
+            `;
+        }
+
+        function buildTimelineScheduler() {
+            const container = document.getElementById('timeScheduleContainer');
+            container.innerHTML = '';
+            
+            timeIntervals.forEach((timeRange, index) => {
+                const label = document.createElement('label');
+                label.className = "flex items-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-white cursor-pointer bg-white dark:bg-slate-900/50 p-1.5 rounded border border-slate-200 dark:border-white/5 transition-all duration-300";
+                label.innerHTML = `
+                    <input type="checkbox" id="time_${index}" value="${timeRange}" checked onchange="applyFilters()" class="rounded border-slate-200 dark:border-white/10 text-indigo-500 focus:ring-0 focus:ring-offset-0 h-3 w-3 cursor-pointer" />
+                    <span>${timeRange}</span>
+                `;
+                container.appendChild(label);
+            });
+        }
+
+        function applyDaypartTemplate(type) {
+            timeIntervals.forEach((timeRange, index) => {
+                const checkbox = document.getElementById(`time_${index}`);
+                const startHour = parseInt(timeRange.split(':')[0]);
+                
+                if (type === 'PT') {
+                    checkbox.checked = (startHour >= 18 && startHour < 22);
+                } else if (type === 'NPT') {
+                    checkbox.checked = (startHour < 18 || startHour >= 22);
+                }
+            });
+            applyFilters();
+        }
+
+        function toggleTimeAll(checkState) {
+            timeIntervals.forEach((_, index) => {
+                document.getElementById(`time_${index}`).checked = checkState;
+            });
+            applyFilters();
+        }
+
+        // Parallel Queue Processing Engine for Multi-file Uploads (Extremely Optimized for 400,000+ Rows)
+        document.getElementById('excelFile').addEventListener('change', async function(e) {
+            const files = Array.from(e.target.files).slice(0, 12);
+            if (files.length === 0) return;
+
+            // UI Toggle to Loading view state
+            const uploadDefault = document.getElementById('uploadDefaultView');
+            const uploadLoading = document.getElementById('uploadLoadingView');
+            const percentLabel = document.getElementById('loadingPercentLabel');
+            const filesLabel = document.getElementById('loadingFilesLabel');
+            const progressBar = document.getElementById('loadingProgressBar');
+            const fileLabel = document.getElementById('parsingFileLabel');
+            const alertBox = document.getElementById('validationAlert');
+            const errorList = document.getElementById('errorList');
+
+            uploadDefault.classList.add('hidden');
+            uploadLoading.classList.remove('hidden');
+            alertBox.classList.add('hidden');
+            errorList.innerHTML = '';
+
+            let combinedImportedRows = [];
+            let failedFiles = [];
+            let processedFilesCount = 0;
+
+            // Sequenced reading flow to trace exact percentage values
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                fileLabel.innerText = `Currently parsing: ${file.name}`;
+                
+                const rows = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const data = new Uint8Array(e.target.result);
+                            
+                            // High performance non-blocking sheet read configuration
+                            const workbook = XLSX.read(data, { 
+                                type: 'array',
+                                cellHTML: false,  
+                                cellFormula: false,
+                                cellText: false
+                            });
+                            
+                            const sheetName = workbook.SheetNames.includes("Sheet1") ? "Sheet1" : workbook.SheetNames[0];
+                            const worksheet = workbook.Sheets[sheetName];
+                            
+                            // Parse sheet rows
+                            let parsed = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+                            
+                            if (parsed.length > 0) {
+                                const sampleRowKeys = Object.keys(parsed[0]).map(k => k.trim());
+                                const expectedKeys = ['TVR', 'Cost', 'Channel', 'Product_Group'];
+                                const missingKeys = expectedKeys.filter(key => !sampleRowKeys.includes(key));
+                                
+                                if (missingKeys.length > 0) {
+                                    failedFiles.push({ name: file.name, reason: `Missing columns: ${missingKeys.join(', ')}` });
+                                    resolve([]);
+                                } else {
+                                    resolve(parsed);
+                                }
+                            } else {
+                                failedFiles.push({ name: file.name, reason: "The uploaded spreadsheet has no rows" });
+                                resolve([]);
+                            }
+                        } catch (err) {
+                            failedFiles.push({ name: file.name, reason: "Corrupted structure or unreadable excel binary layout" });
+                            resolve([]);
+                        }
+                    };
+                    reader.readAsArrayBuffer(file);
+                });
+
+                combinedImportedRows = combinedImportedRows.concat(rows);
+                
+                // Update Progress metrics
+                processedFilesCount++;
+                const percentage = Math.round((processedFilesCount / files.length) * 100);
+                percentLabel.innerText = `Processing: ${percentage}%`;
+                filesLabel.innerText = `${processedFilesCount} of ${files.length} files`;
+                progressBar.style.width = `${percentage}%`;
+            }
+
+            // If invalid schemas are found, show errors
+            if (failedFiles.length > 0) {
+                alertBox.classList.remove('hidden');
+                failedFiles.forEach(f => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>${f.name}</strong>: ${f.reason}`;
+                    errorList.appendChild(li);
+                });
+            }
+
+            if (combinedImportedRows.length === 0) {
+                // Return to default state if all files failed
+                uploadDefault.classList.remove('hidden');
+                uploadLoading.classList.add('hidden');
+                document.getElementById('excelFile').value = '';
+                return;
+            }
+
+            // Standardizing Data Structures efficiently in micro-batches
+            const len = combinedImportedRows.length;
+            const cleanedRows = new Array(len);
+            
+            // Loop in batches to prevent browser lock-ups
+            const BATCH_SIZE = 25000;
+            for (let i = 0; i < len; i += BATCH_SIZE) {
+                const end = Math.min(i + BATCH_SIZE, len);
+                for (let j = i; j < end; j++) {
+                    const row = combinedImportedRows[j];
+                    let cleanRow = {};
+                    for (let key in row) {
+                        cleanRow[key.trim()] = row[key];
+                    }
+                    if (cleanRow['Mn']) {
+                        const monthCode = cleanRow['Mn'].toString().trim();
+                        if (monthMap[monthCode]) {
+                            cleanRow['Mn'] = monthMap[monthCode];
+                        }
+                    }
+                    cleanedRows[j] = cleanRow;
+                }
+                
+                // Yield control to the browser thread to update progress UI
+                const renderPercentage = Math.round((end / len) * 100);
+                percentLabel.innerText = `Assembling Database: ${renderPercentage}%`;
+                progressBar.style.width = `${renderPercentage}%`;
+                await new Promise(resolve => setTimeout(resolve, 0));
+            }
+
+            rawData = rawData.concat(cleanedRows);
+            saveDataToCache(rawData);
+
+            document.getElementById('workspace').classList.remove('hidden');
+            document.getElementById('dataCounter').classList.remove('hidden');
+            document.getElementById('restoreBadge').classList.add('hidden');
+            document.getElementById('recordCount').innerText = rawData.length.toLocaleString();
+            updateTimeline();
+
+            buildTimelineScheduler();
+            initCheckboxes();
+            applyFilters();
+
+            // Clear variables from stack to free browser memory
+            combinedImportedRows = null;
+
+            // Return input overlay state to default
+            uploadDefault.classList.remove('hidden');
+            uploadLoading.classList.add('hidden');
+            document.getElementById('excelFile').value = '';
+        });
+
+        function updateTimeline() {
+            const monthsLoaded = new Set();
+            const yearsLoaded = new Set();
+            
+            const len = rawData.length;
+            for (let i = 0; i < len; i++) {
+                const row = rawData[i];
+                if (row['Mn']) monthsLoaded.add(row['Mn'].toString().trim());
+                if (row['Yr']) yearsLoaded.add(row['Yr'].toString().trim());
+            }
+
+            const monthOrder = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const sortedMonths = Array.from(monthsLoaded).sort((a,b) => monthOrder.indexOf(a) - monthOrder.indexOf(b));
+            const sortedYears = Array.from(yearsLoaded).sort();
+
+            const timelineStr = `${sortedMonths.join(', ')} (${sortedYears.join(', ')})`;
+            document.getElementById('timelineTracker').innerText = timelineStr;
+        }
+
+        function initCheckboxes() {
+            const datasets = {
+                'chanList': new Set(),
+                'monthList': new Set(),
+                'prodList': new Set(),
+                'advList': new Set()
+            };
+
+            const len = rawData.length;
+            for (let i = 0; i < len; i++) {
+                const row = rawData[i];
+                if (row['Channel']) datasets.chanList.add(row['Channel'].toString().trim());
+                if (row['Mn']) datasets.monthList.add(row['Mn'].toString().trim());
+                if (row['Product_Group']) datasets.prodList.add(row['Product_Group'].toString().trim());
+                if (row['Advertiser']) datasets.advList.add(row['Advertiser'].toString().trim());
+            }
+
+            buildCheckboxList('chanList', datasets.chanList);
+            buildCheckboxList('monthList', datasets.monthList, true);
+            buildCheckboxList('prodList', datasets.prodList);
+            buildCheckboxList('advList', datasets.advList);
+        }
+
+        function buildCheckboxList(containerId, dataset, isMonth = false) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = ''; 
+            
+            let sortedArray;
+            if (isMonth) {
+                const monthOrder = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                sortedArray = Array.from(dataset).sort((a,b) => monthOrder.indexOf(a) - monthOrder.indexOf(b));
+            } else {
+                sortedArray = Array.from(dataset).sort();
+            }
+
+            sortedArray.forEach(val => {
+                const label = document.createElement('label');
+                label.className = "flex items-center gap-2.5 text-xs text-slate-555 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors py-0.5 filter-item cursor-pointer";
+                label.innerHTML = `
+                    <input type="checkbox" value="${val}" checked onchange="applyFilters()" class="rounded border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 text-indigo-500 h-4 w-4 cursor-pointer animate-card" />
+                    <span class="truncate">${val}</span>
+                `;
+                container.appendChild(label);
+            });
+        }
+
+        function filterCheckboxes(searchId, listId) {
+            const query = document.getElementById(searchId).value.toLowerCase();
+            const items = document.querySelectorAll(`#${listId} .filter-item`);
+            
+            items.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        }
+
+        function toggleSelectAll(listId, checkState) {
+            const visibleItems = document.querySelectorAll(`#${listId} .filter-item:not(.hidden) input[type="checkbox"]`);
+            visibleItems.forEach(box => {
+                box.checked = checkState;
+            });
+            applyFilters();
+        }
+
+        function getSelectedValues(containerId) {
+            const checkedBoxes = document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`);
+            return Array.from(checkedBoxes).map(cb => cb.value);
+        }
+
+        function isTimeInSelectedIntervals(timeStr, activeIntervalsHash) {
+            if (!timeStr) return false;
+            let hours = 0;
+            let minutes = 0;
+
+            if (typeof timeStr === 'number') {
+                const totalSeconds = Math.round(timeStr * 86400);
+                hours = Math.floor(totalSeconds / 3600);
+                minutes = Math.floor((totalSeconds % 3600) / 60);
+            } else {
+                const parts = timeStr.toString().trim().split(':');
+                if (parts.length < 2) return false;
+                hours = parseInt(parts[0]);
+                minutes = parseInt(parts[1]);
+            }
+
+            if (isNaN(hours) || isNaN(minutes)) return false;
+
+            const stepIndex = (hours * 2) + (minutes >= 30 ? 1 : 0);
+            const matchingRange = timeIntervals[stepIndex];
+
+            return activeIntervalsHash.has(matchingRange);
+        }
+
+        function applyFilters() {
+            const selChannels = new Set(getSelectedValues('chanList'));
+            const selMonths = new Set(getSelectedValues('monthList'));
+            const selProdGroups = new Set(getSelectedValues('prodList'));
+            const selAdvertisers = new Set(getSelectedValues('advList'));
+
+            const selectedIntervals = new Set();
+            timeIntervals.forEach((interval, index) => {
+                if (document.getElementById(`time_${index}`).checked) {
+                    selectedIntervals.add(interval);
+                }
+            });
+
+            // Parallel typed matching operations
+            const len = rawData.length;
+            const tempFiltered = [];
+            
+            for (let i = 0; i < len; i++) {
+                const row = rawData[i];
+                const rowChan = row['Channel'] ? row['Channel'].toString().trim() : '';
+                const rowMn = row['Mn'] ? row['Mn'].toString().trim() : '';
+                const rowPg = row['Product_Group'] ? row['Product_Group'].toString().trim() : '';
+                const rowAdv = row['Advertiser'] ? row['Advertiser'].toString().trim() : '';
+
+                if (selChannels.has(rowChan) && 
+                    selMonths.has(rowMn) && 
+                    selProdGroups.has(rowPg) && 
+                    selAdvertisers.has(rowAdv) && 
+                    isTimeInSelectedIntervals(row['Advt_time'], selectedIntervals)) {
+                    tempFiltered.push(row);
+                }
+            }
+
+            filteredData = tempFiltered;
+
+            calculateMetrics(selProdGroups);
+            renderTable();
+        }
+
+        function formatLKR(value) {
+            if (Math.abs(value) >= 1.0e+9) {
+                return `LKR ${(value / 1.0e+9).toFixed(2)} B`;
+            } else if (Math.abs(value) >= 1.0e+6) {
+                return `LKR ${(value / 1.0e+6).toFixed(2)} M`;
+            } else {
+                return `LKR ${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            }
+        }
+
+        function toggleAiBubble() {
+            document.getElementById('aiChatBubble').classList.toggle('hidden');
+        }
+
+        function calculateMetrics(selProdGroupsSet) {
+            let totalTvr = 0;
+            let totalNtvr = 0;
+            let totalCost = 0;
+            let totalSpots = filteredData.length;
+
+            const len = filteredData.length;
+            for (let i = 0; i < len; i++) {
+                const row = filteredData[i];
+                totalTvr += parseFloat(row['TVR']) || 0;
+                totalNtvr += parseFloat(row['nTVR']) || 0;
+                totalCost += parseFloat(row['Cost']) || 0;
+            }
+
+            document.getElementById('metricGrpTvr').innerText = Math.round(totalTvr).toLocaleString();
+            document.getElementById('metricGrpNtvr').innerText = Math.round(totalNtvr).toLocaleString();
+            document.getElementById('metricTotalCost').innerText = formatLKR(totalCost);
+            document.getElementById('metricRawCost').innerText = `Exact: LKR ${totalCost.toLocaleString()}`;
+            document.getElementById('metricTotalSpots').innerText = totalSpots.toLocaleString();
+
+            renderSovTopCharts(selProdGroupsSet, totalCost, totalTvr, totalNtvr);
+            updateAiAnalysis(totalCost, totalTvr, totalSpots);
+        }
+
+        function renderSovTopCharts(selProdGroupsSet, filteredCost, filteredGrp, filteredNgrp) {
+            let groupCostSum = 0;
+            let groupGrpSum = 0;
+            let groupNgrpSum = 0;
+
+            const totalLen = rawData.length;
+            for (let i = 0; i < totalLen; i++) {
+                const row = rawData[i];
+                const rowGroup = row['Product_Group'] ? row['Product_Group'].toString().trim() : '';
+                if (selProdGroupsSet.has(rowGroup)) {
+                    groupCostSum += parseFloat(row['Cost']) || 0;
+                    groupGrpSum += parseFloat(row['TVR']) || 0;
+                    groupNgrpSum += parseFloat(row['nTVR']) || 0;
+                }
+            }
+
+            let baselineTotal = 0;
+            if (activeSovMetric === 'Cost') baselineTotal = groupCostSum;
+            else if (activeSovMetric === 'GRP') baselineTotal = groupGrpSum;
+            else if (activeSovMetric === 'nGRP') baselineTotal = groupNgrpSum;
+
+            let advertiserGroups = {};
+            let brandGroups = {};
+
+            const filteredLen = filteredData.length;
+            for (let i = 0; i < filteredLen; i++) {
+                const row = filteredData[i];
+                const adv = row['Advertiser'] ? row['Advertiser'].toString().trim() : 'Unknown';
+                const brand = row['Product'] ? row['Product'].toString().trim() : 'Unknown';
+                
+                let metricVal = 0;
+                if (activeSovMetric === 'Cost') metricVal = parseFloat(row['Cost']) || 0;
+                else if (activeSovMetric === 'GRP') metricVal = parseFloat(row['TVR']) || 0;
+                else if (activeSovMetric === 'nGRP') metricVal = parseFloat(row['nTVR']) || 0;
+
+                advertiserGroups[adv] = (advertiserGroups[adv] || 0) + metricVal;
+                brandGroups[brand] = (brandGroups[brand] || 0) + metricVal;
+            }
+
+            const topAdvertisers = Object.entries(advertiserGroups).sort((a,b) => b[1] - a[1]).slice(0, 10);
+            const topBrands = Object.entries(brandGroups).sort((a,b) => b[1] - a[1]).slice(0, 10);
+
+            let metricLabel = 'Spend SOV';
+            if (activeSovMetric === 'GRP') metricLabel = 'GRP (TVR) SOV';
+            if (activeSovMetric === 'nGRP') metricLabel = 'GRP (nTVR) SOV';
+
+            document.getElementById('sovAdvMetricHeader').innerText = metricLabel;
+            document.getElementById('sovBrandMetricHeader').innerText = metricLabel;
+
+            renderBarList('topAdvertisersList', topAdvertisers, baselineTotal, activeSovMetric);
+            renderBarList('topBrandsList', topBrands, baselineTotal, activeSovMetric);
+        }
+
+        function renderBarList(containerId, listData, baselineTotal, metricType) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            if (listData.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 py-4 text-center">No matching records found.</p>`;
+                return;
+            }
+
+            listData.forEach(([name, val]) => {
+                const pct = baselineTotal > 0 ? ((val / baselineTotal) * 100) : 0;
+                
+                let formattedVal = '';
+                if (metricType === 'Cost') formattedVal = formatLKR(val);
+                else if (metricType === 'GRP') formattedVal = `${Math.round(val)} GRP`;
+                else if (metricType === 'nGRP') formattedVal = `${Math.round(val)} nGRP`;
+                
+                const itemDiv = document.createElement('div');
+                itemDiv.className = "flex flex-col gap-1.5 transition-all duration-300 hover:translate-x-1";
+                itemDiv.innerHTML = `
+                    <div class="flex justify-between text-xs font-semibold">
+                        <span class="text-slate-700 dark:text-slate-300 truncate max-w-[200px] md:max-w-[300px]">${name}</span>
+                        <span class="text-slate-900 dark:text-white">${pct.toFixed(2)}% <span class="text-[10px] text-slate-400 font-normal">(${formattedVal})</span></span>
+                    </div>
+                    <div class="w-full bg-slate-200 dark:bg-white/5 rounded-full h-2.5 overflow-hidden">
+                        <div class="bg-indigo-600 h-2.5 rounded-full progress-bar-fill" style="width: 0%"></div>
+                    </div>
+                `;
+                container.appendChild(itemDiv);
+                
+                setTimeout(() => {
+                    const fill = itemDiv.querySelector('.progress-bar-fill');
+                    if (fill) fill.style.width = `${Math.min(pct, 100)}%`;
+                }, 50);
+            });
+        }
+
+        function toggleSovMetric(metric) {
+            activeSovMetric = metric;
+            const btnCost = document.getElementById('toggleSovCost');
+            const btnGrp = document.getElementById('toggleSovGRP');
+            const btnNgrp = document.getElementById('toggleSovNgrp');
+
+            [btnCost, btnGrp, btnNgrp].forEach(btn => {
+                btn.className = "px-4 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer";
+            });
+
+            if (metric === 'Cost') {
+                btnCost.className = "px-4 py-1.5 rounded-lg bg-white dark:bg-white/10 text-slate-950 dark:text-white shadow-xs cursor-pointer";
+            } else if (metric === 'GRP') {
+                btnGrp.className = "px-4 py-1.5 rounded-lg bg-white dark:bg-white/10 text-slate-950 dark:text-white shadow-xs cursor-pointer";
+            } else if (metric === 'nGRP') {
+                btnNgrp.className = "px-4 py-1.5 rounded-lg bg-white dark:bg-white/10 text-slate-950 dark:text-white shadow-xs cursor-pointer";
+            }
+
+            applyFilters();
+        }
+
+        // Optimized Table preview renders first 50 entries to keep DOM tree small & lightning-fast
+        function renderTable() {
+            const headers = document.getElementById('tableHeaders');
+            const body = document.getElementById('tableBody');
+
+            headers.innerHTML = '';
+            body.innerHTML = '';
+
+            if (filteredData.length === 0) {
+                body.innerHTML = `<tr><td colspan="100%" class="px-6 py-8 text-center text-slate-400 bg-white/5 rounded-xl">No matching rows found.</td></tr>`;
+                return;
+            }
+
+            const columns = Object.keys(filteredData[0]);
+            columns.forEach(col => {
+                const th = document.createElement('th');
+                th.className = "px-4 py-2.5 text-left text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-slate-950/20";
+                th.innerText = col;
+                headers.appendChild(th);
+            });
+
+            const maxPreviewRows = 50;
+            const rowsToDisplay = filteredData.slice(0, maxPreviewRows);
+            rowsToDisplay.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-100 dark:hover:bg-white/5 transition-colors duration-150";
+                columns.forEach(col => {
+                    const td = document.createElement('td');
+                    td.className = "px-4 py-2 whitespace-nowrap border-b border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-300";
+                    td.innerText = row[col] !== undefined ? row[col] : '';
+                    tr.appendChild(td);
+                });
+                body.appendChild(tr);
+            });
+
+            if (filteredData.length > maxPreviewRows) {
+                const footerRow = document.createElement('tr');
+                footerRow.innerHTML = `<td colspan="${columns.length}" class="px-6 py-3 text-center text-[10px] text-slate-400 font-medium bg-transparent">Capped at top 50 matches for speed. Export CSV to inspect all ${filteredData.length.toLocaleString()} matching records.</td>`;
+                body.appendChild(footerRow);
+            }
+        }
+
+        function downloadFilteredData() {
+            if (filteredData.length === 0) return;
+            const worksheet = XLSX.utils.json_to_sheet(filteredData);
+            const csvOutput = XLSX.utils.sheet_to_csv(worksheet);
+
+            const blob = new Blob([csvOutput], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", "Media_Campaign_Export.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function resetFilters() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+            document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+            document.querySelectorAll('.filter-item').forEach(item => item.classList.remove('hidden'));
+            applyFilters();
+        }
+
+        function clearAllData() {
+            if (confirm("Are you sure you want to clear your current database and reset the workspace?")) {
+                rawData = [];
+                filteredData = [];
+                
+                try {
+                    localStorage.removeItem('spots_cache');
+                } catch (err) {
+                    console.warn("Could not wipe Cache Store:", err);
+                }
+
+                document.getElementById('workspace').classList.add('hidden');
+                document.getElementById('dataCounter').classList.add('hidden');
+                updateAiAnalysis(0, 0, 0);
+            }
+        }
+    </script>
+
+</body></html>
